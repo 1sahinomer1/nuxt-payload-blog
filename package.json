@@ -1,0 +1,44 @@
+{
+  "name": "nuxt-payload-blog",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "nuxt dev",
+    "build": "nuxt build",
+    "preview": "nuxt preview",
+    "lint": "eslint .",
+    "typecheck": "nuxt typecheck",
+    "cms:dev": "pnpm --filter cms dev",
+    "cms:seed": "pnpm --filter cms seed",
+    "cms:build": "pnpm --filter cms build"
+  },
+  "engines": {
+    "node": ">=20.9.0"
+  },
+  "packageManager": "pnpm@9.0.0",
+  "dependencies": {
+    "nuxt": "4.0.0",
+    "vue": "^3.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^22.0.0",
+    "@typescript-eslint/eslint-plugin": "^8.0.0",
+    "@typescript-eslint/parser": "^8.0.0",
+    "@vue/eslint-config-typescript": "^13.0.0",
+    "eslint": "^9.0.0",
+    "eslint-plugin-vue": "^9.0.0",
+    "tailwindcss": "4.0.0",
+    "@tailwindcss/vite": "^4.0.0",
+    "typescript": "^5.7.0",
+    "vue-tsc": "^2.0.0"
+  },
+  "pnpm": {
+    "overrides": {
+      "esbuild": "0.25.12"
+    },
+    "onlyBuiltDependencies": [
+      "esbuild",
+      "sharp"
+    ]
+  }
+}
