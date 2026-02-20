@@ -1,7 +1,10 @@
+// Production PostgreSQL Configuration Example
+// Copy this to payload.config.ts and install @payloadcms/db-postgres
+
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { buildConfig } from 'payload'
-import { sqliteAdapter } from '@payloadcms/db-sqlite'
+import { postgresAdapter } from '@payloadcms/db-postgres'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { Posts } from './src/collections/Posts'
 import { Authors } from './src/collections/Authors'
@@ -11,11 +14,6 @@ import { Users } from './src/collections/Users'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-// Database URL - defaults to SQLite for development
-// For production, set DATABASE_URL to PostgreSQL connection string
-const databaseUrl = process.env.DATABASE_URL || 'file:./data/payload.db'
-
-// CORS & CSRF: Support both dev and production URLs
 const frontendUrl = process.env.FRONTEND_URL || process.env.SITE_URL || 'http://localhost:3000'
 const corsOrigins = [
   'http://localhost:3000',
@@ -34,15 +32,14 @@ export default buildConfig({
 
   editor: lexicalEditor(),
 
-  // SQLite for development
-  // For production with PostgreSQL, see DEPLOYMENT.md
-  db: sqliteAdapter({
-    client: {
-      url: databaseUrl,
+  // PostgreSQL for production
+  db: postgresAdapter({
+    pool: {
+      connectionString: process.env.DATABASE_URL,
     },
   }),
 
-  secret: process.env.PAYLOAD_SECRET || 'super-secret-key-please-change-in-production',
+  secret: process.env.PAYLOAD_SECRET!,
 
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),

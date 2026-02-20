@@ -84,11 +84,33 @@ pnpm preview
 
 ## Deployment
 
-**Frontend:** Deploy to Vercel or any Node.js hosting that supports Nuxt SSR.
+### Quick Start
 
-**CMS:** Deploy as a Node.js server. Run `pnpm build` then `pnpm start` in the `cms` directory.
+**Önerilen**: Vercel (Frontend) + Railway (CMS)
 
-Set `PAYLOAD_URL` in the frontend environment to point to your deployed CMS URL.
+Detaylı rehber için:
+- **Hızlı başlangıç**: [`QUICK_DEPLOY.md`](./QUICK_DEPLOY.md)
+- **Detaylı rehber**: [`DEPLOYMENT.md`](./DEPLOYMENT.md)
+
+### Özet
+
+1. **Frontend (Nuxt)**: Vercel'e deploy et
+   - GitHub repo'yu bağla
+   - Build command: `pnpm build`
+   - Environment: `PAYLOAD_URL`, `SITE_URL`
+
+2. **CMS (Payload)**: Railway/Render'e deploy et
+   - PostgreSQL database ekle
+   - Root directory: `cms`
+   - Build: `pnpm build`, Start: `pnpm start`
+   - Environment: `DATABASE_URL`, `PAYLOAD_SECRET`, `FRONTEND_URL`
+
+3. **PostgreSQL'e geçiş**: Production'da SQLite yerine PostgreSQL kullan
+   - `@payloadcms/db-postgres` paketini ekle
+   - `payload.config.ts`'yi PostgreSQL adapter ile güncelle
+   - Örnek: [`cms/payload.config.postgres.ts.example`](./cms/payload.config.postgres.ts.example)
+
+**Not**: Development'ta SQLite kullanıyoruz. Production'da mutlaka PostgreSQL kullan!
 
 ## Project Structure
 
