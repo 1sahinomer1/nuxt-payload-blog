@@ -13,8 +13,8 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     public: {
-      payloadUrl: process.env.PAYLOAD_URL || 'http://localhost:3001',
-      siteUrl: process.env.SITE_URL || 'http://localhost:3000',
+      payloadUrl: 'http://localhost:3001',
+      siteUrl: 'http://localhost:3000',
     },
   },
 

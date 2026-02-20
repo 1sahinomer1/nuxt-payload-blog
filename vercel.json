@@ -1,11 +1,3 @@
 {
-  "buildCommand": "pnpm build",
-  "outputDirectory": ".output/public",
-  "devCommand": "pnpm dev",
-  "installCommand": "pnpm install",
-  "framework": "nuxt",
-  "env": {
-    "PAYLOAD_URL": "@payload_url",
-    "SITE_URL": "@site_url"
-  }
+  "framework": "nuxtjs"
 }

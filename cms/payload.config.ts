@@ -1,6 +1,7 @@
 import path from 'path'
 import { fileURLToPath } from 'url'
 import { buildConfig } from 'payload'
+import { postgresAdapter } from '@payloadcms/db-postgres'
 import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { Posts } from './src/collections/Posts'
@@ -11,16 +12,13 @@ import { Users } from './src/collections/Users'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-// Database URL - defaults to SQLite for development
-// For production, set DATABASE_URL to PostgreSQL connection string
 const databaseUrl = process.env.DATABASE_URL || 'file:./data/payload.db'
+const isPostgres = databaseUrl.startsWith('postgres')
 
-// CORS & CSRF: Support both dev and production URLs
-const frontendUrl = process.env.FRONTEND_URL || process.env.SITE_URL || 'http://localhost:3000'
-const corsOrigins = [
-  'http://localhost:3000',
-  frontendUrl,
-].filter(Boolean)
+const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000'
+const corsOrigins = ['http://localhost:3000', frontendUrl].filter(
+  (v, i, a) => a.indexOf(v) === i,
+)
 
 export default buildConfig({
   admin: {
@@ -34,21 +32,16 @@ export default buildConfig({
 
   editor: lexicalEditor(),
 
-  // SQLite for development
-  // For production with PostgreSQL, see DEPLOYMENT.md
-  db: sqliteAdapter({
-    client: {
-      url: databaseUrl,
-    },
-  }),
+  db: isPostgres
+    ? postgresAdapter({ pool: { connectionString: databaseUrl } })
+    : sqliteAdapter({ client: { url: databaseUrl } }),
 
-  secret: process.env.PAYLOAD_SECRET || 'super-secret-key-please-change-in-production',
+  secret: process.env.PAYLOAD_SECRET || 'dev-secret-change-in-production',
 
   typescript: {
     outputFile: path.resolve(dirname, 'payload-types.ts'),
   },
 
   cors: corsOrigins,
-
   csrf: corsOrigins,
 })
