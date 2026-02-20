@@ -7,14 +7,28 @@ export function usePosts() {
   function getPosts(page = 1, limit = 10) {
     return useAsyncData<PayloadResponse<Post>>(
       `posts-${page}-${limit}`,
-      () => $fetch(`${baseUrl}/posts`, {
-        params: {
-          page,
-          limit,
-          sort: '-publishedAt',
-          depth: 1,
-        },
-      }),
+      async () => {
+        try {
+          const url = `${baseUrl}/posts`
+          const response = await $fetch<PayloadResponse<Post>>(url, {
+            params: {
+              page,
+              limit,
+              sort: '-publishedAt',
+              depth: 1,
+            },
+          })
+          return response
+        } catch (error: any) {
+          console.error('Failed to fetch posts:', error)
+          console.error('API URL:', baseUrl)
+          console.error('Payload URL from config:', config.public.payloadUrl)
+          throw error
+        }
+      },
+      {
+        default: () => ({ docs: [], totalDocs: 0, limit: 10, totalPages: 0, page: 1, pagingCounter: 0, hasPrevPage: false, hasNextPage: false, prevPage: null, nextPage: null }),
+      },
     )
   }
 
