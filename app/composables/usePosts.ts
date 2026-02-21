@@ -18,7 +18,7 @@ export function usePosts() {
         retryDelay: 500,
       }),
       {
-        lazy: true,
+        lazy: import.meta.client,
         default: () => ({ docs: [], totalDocs: 0, limit: 10, totalPages: 0, page: 1, pagingCounter: 0, hasPrevPage: false, hasNextPage: false, prevPage: null, nextPage: null }),
       },
     )
@@ -36,7 +36,7 @@ export function usePosts() {
         retryDelay: 500,
       }),
       {
-        lazy: true,
+        lazy: import.meta.client,
       },
     )
   }
