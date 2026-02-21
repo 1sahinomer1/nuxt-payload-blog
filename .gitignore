@@ -13,3 +13,4 @@ cms/.next
 cms/data
 cms/media
 cms/payload-types.ts
+.vercel

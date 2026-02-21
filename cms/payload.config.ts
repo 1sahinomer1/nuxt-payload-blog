@@ -15,12 +15,20 @@ const dirname = path.dirname(filename)
 const databaseUrl = process.env.DATABASE_URL || 'file:./data/payload.db'
 const isPostgres = databaseUrl.startsWith('postgres')
 
+const vercelUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
+const serverUrl = process.env.SERVER_URL || (vercelUrl ? `https://${vercelUrl}` : 'http://localhost:3001')
 const frontendUrl = process.env.FRONTEND_URL || 'http://localhost:3000'
-const corsOrigins = ['http://localhost:3000', frontendUrl].filter(
-  (v, i, a) => a.indexOf(v) === i,
-)
+
+const corsOrigins = [
+  'http://localhost:3000',
+  'http://localhost:3001',
+  frontendUrl,
+  serverUrl,
+].filter((v, i, a) => Boolean(v) && a.indexOf(v) === i)
 
 export default buildConfig({
+  serverURL: serverUrl,
+
   admin: {
     user: 'users',
     importMap: {

@@ -8,25 +8,18 @@ export function usePosts() {
     return useAsyncData<PayloadResponse<Post>>(
       `posts-${page}-${limit}`,
       async () => {
-        try {
-          const url = `${baseUrl}/posts`
-          const response = await $fetch<PayloadResponse<Post>>(url, {
-            params: {
-              page,
-              limit,
-              sort: '-publishedAt',
-              depth: 1,
-            },
-          })
-          return response
-        } catch (error: any) {
-          console.error('Failed to fetch posts:', error)
-          console.error('API URL:', baseUrl)
-          console.error('Payload URL from config:', config.public.payloadUrl)
-          throw error
-        }
+        const response = await $fetch<PayloadResponse<Post>>(`${baseUrl}/posts`, {
+          params: {
+            page,
+            limit,
+            sort: '-publishedAt',
+            depth: 1,
+          },
+        })
+        return response
       },
       {
+        getCachedData: () => undefined,
         default: () => ({ docs: [], totalDocs: 0, limit: 10, totalPages: 0, page: 1, pagingCounter: 0, hasPrevPage: false, hasNextPage: false, prevPage: null, nextPage: null }),
       },
     )
@@ -41,6 +34,9 @@ export function usePosts() {
           depth: 2,
         },
       }),
+      {
+        getCachedData: () => undefined,
+      },
     )
   }
 

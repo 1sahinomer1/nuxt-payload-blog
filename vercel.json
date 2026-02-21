@@ -1,8 +1,3 @@
 {
-  "framework": "nuxtjs",
-  "buildCommand": "pnpm build",
-  "env": {
-    "NUXT_PUBLIC_PAYLOAD_URL": "@nuxt_public_payload_url",
-    "NUXT_PUBLIC_SITE_URL": "@nuxt_public_site_url"
-  }
+  "framework": "nuxtjs"
 }
