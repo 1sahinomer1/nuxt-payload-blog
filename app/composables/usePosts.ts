@@ -7,19 +7,18 @@ export function usePosts() {
   function getPosts(page = 1, limit = 10) {
     return useAsyncData<PayloadResponse<Post>>(
       `posts-${page}-${limit}`,
-      async () => {
-        const response = await $fetch<PayloadResponse<Post>>(`${baseUrl}/posts`, {
-          params: {
-            page,
-            limit,
-            sort: '-publishedAt',
-            depth: 1,
-          },
-        })
-        return response
-      },
+      () => $fetch<PayloadResponse<Post>>(`${baseUrl}/posts`, {
+        params: {
+          page,
+          limit,
+          sort: '-publishedAt',
+          depth: 1,
+        },
+        retry: 2,
+        retryDelay: 500,
+      }),
       {
-        getCachedData: () => undefined,
+        lazy: true,
         default: () => ({ docs: [], totalDocs: 0, limit: 10, totalPages: 0, page: 1, pagingCounter: 0, hasPrevPage: false, hasNextPage: false, prevPage: null, nextPage: null }),
       },
     )
@@ -33,9 +32,11 @@ export function usePosts() {
           'where[slug][equals]': slug,
           depth: 2,
         },
+        retry: 2,
+        retryDelay: 500,
       }),
       {
-        getCachedData: () => undefined,
+        lazy: true,
       },
     )
   }
