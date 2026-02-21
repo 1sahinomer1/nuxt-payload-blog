@@ -2,6 +2,6 @@
   "framework": "nuxtjs",
   "env": {
     "NUXT_PUBLIC_PAYLOAD_URL": "https://nuxt-blog-cms.vercel.app",
-    "NUXT_PUBLIC_SITE_URL": "https://nuxt-payload-blog.vercel.app"
+    "NUXT_PUBLIC_SITE_URL": "https://nuxt-blog-frontend.vercel.app"
   }
 }
