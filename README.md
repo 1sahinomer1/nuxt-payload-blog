@@ -16,6 +16,7 @@ pnpm install
 # 2. Create environment files
 cp .env.example .env
 cp cms/.env.example cms/.env
+# Edit cms/.env and set DATABASE_URL to a PostgreSQL connection string (e.g. Neon, local Postgres).
 
 # 3. Start Payload CMS (Terminal 1)
 pnpm cms:dev
@@ -49,7 +50,8 @@ On first launch, create an admin account at the registration screen.
 pnpm build
 
 # Build CMS
-cd cms && pnpm build
+pnpm cms:build
+# or: cd cms && pnpm build
 ```
 
 ## Preview Production Build
@@ -64,75 +66,65 @@ pnpm preview
 
 | Variable | Default | Description |
 |----------|---------|-------------|
-| `PAYLOAD_URL` | `http://localhost:3001` | Payload CMS API URL |
-| `SITE_URL` | `http://localhost:3000` | Public site URL (for SEO) |
+| `NUXT_PUBLIC_PAYLOAD_URL` | `http://localhost:3001` | Payload CMS API URL |
+| `NUXT_PUBLIC_SITE_URL` | `http://localhost:3000` | Public site URL (for SEO) |
 
 ### CMS (`cms/.env`)
 
-| Variable | Default | Description |
-|----------|---------|-------------|
-| `DATABASE_URL` | `file:./data/payload.db` | SQLite database path |
-| `PAYLOAD_SECRET` | — | Secret key for Payload |
+| Variable | Description |
+|----------|-------------|
+| `DATABASE_URL` | PostgreSQL connection string (required). Example: `postgresql://user:pass@host:5432/dbname?sslmode=require` |
+| `PAYLOAD_SECRET` | Secret key for Payload (required in production) |
 
 ## Deployment
 
-### Quick Start
+**Önerilen**: Vercel (Frontend) + Vercel/Railway (CMS)
 
-**Önerilen**: Vercel (Frontend) + Railway (CMS)
-
-Detaylı rehber için:
-- **Hızlı başlangıç**: [`QUICK_DEPLOY.md`](./QUICK_DEPLOY.md)
-- **Detaylı rehber**: [`DEPLOYMENT.md`](./DEPLOYMENT.md)
-
-### Özet
-
-1. **Frontend (Nuxt)**: Vercel'e deploy et
-   - GitHub repo'yu bağla
+1. **Frontend (Nuxt)** — Vercel
+   - GitHub repo'yu bağla, root: project root
    - Build command: `pnpm build`
-   - Environment: `PAYLOAD_URL`, `SITE_URL`
+   - Environment: `NUXT_PUBLIC_PAYLOAD_URL`, `NUXT_PUBLIC_SITE_URL`
 
-2. **CMS (Payload)**: Railway/Render'e deploy et
-   - PostgreSQL database ekle
+2. **CMS (Payload)** — Vercel (veya Railway/Render)
    - Root directory: `cms`
    - Build: `pnpm build`, Start: `pnpm start`
-   - Environment: `DATABASE_URL`, `PAYLOAD_SECRET`, `FRONTEND_URL`
+   - Environment: `DATABASE_URL` (PostgreSQL), `PAYLOAD_SECRET`, `FRONTEND_URL` (optional, for CORS)
 
-3. **PostgreSQL'e geçiş**: Production'da SQLite yerine PostgreSQL kullan
-   - `@payloadcms/db-postgres` paketini ekle
-   - `payload.config.ts`'yi PostgreSQL adapter ile güncelle
-   - Örnek: [`cms/payload.config.postgres.ts.example`](./cms/payload.config.postgres.ts.example)
-
-**Not**: Development'ta SQLite kullanıyoruz. Production'da mutlaka PostgreSQL kullan!
+CMS yalnızca PostgreSQL kullanacak şekilde yapılandırılmıştır (production ve local için `DATABASE_URL` gerekir).
 
 ## Project Structure
 
 ```
 ├── app/                    # Nuxt 4 app directory
-│   ├── assets/css/         # Tailwind CSS
-│   ├── components/         # Vue components
-│   ├── composables/        # usePosts composable
-│   ├── layouts/            # App layout
-│   ├── pages/              # Route pages
-│   ├── types/              # TypeScript types
-│   └── utils/              # Rich text renderer
-├── cms/                    # Payload CMS 3 (Next.js)
+│   ├── assets/css/        # Tailwind + dark mode, prose, code blocks
+│   ├── components/        # Vue components (Header, Footer, PostCard, TOC, Share, BackToTop, etc.)
+│   ├── composables/       # usePosts, useColorMode
+│   ├── constants/         # Meta titles, site name
+│   ├── layouts/           # Default layout
+│   ├── pages/             # Home, blog list, blog/[slug]
+│   ├── types/             # TypeScript types
+│   └── utils/             # format, media, post, richtext, share, slug, toc
+├── cms/                   # Payload CMS 3 (Next.js)
 │   ├── src/
-│   │   ├── app/            # Next.js app router (Payload)
-│   │   ├── collections/    # CMS collections
-│   │   └── seed.ts         # Database seed script
-│   └── payload.config.ts   # Payload configuration
-├── server/                 # Nuxt server routes
-│   └── routes/             # Sitemap generator
-├── public/                 # Static assets
-├── nuxt.config.ts          # Nuxt configuration
+│   │   ├── app/           # Next.js app router (Payload)
+│   │   ├── collections/   # Posts, Authors, Media, Users
+│   │   └── seed.ts        # Database seed script
+│   └── payload.config.ts  # Payload config (PostgreSQL)
+├── server/routes/         # Nuxt server (e.g. sitemap)
+├── public/                # Static assets
+├── nuxt.config.ts
 └── package.json
 ```
 
 ## Tech Stack
 
 - **Nuxt 4** — SSR Vue framework
-- **Payload CMS 3** — Headless CMS with admin panel
-- **Tailwind CSS v4** — Utility-first CSS
+- **Payload CMS 3** — Headless CMS with admin panel (PostgreSQL)
+- **Tailwind CSS v4** — Utility-first CSS, class-based dark mode
 - **TypeScript** — Strict type safety
-- **SQLite** — Lightweight database
-- **pnpm** — Fast package manager
+- **pnpm** — Package manager
+
+## Documentation
+
+- [TEKNIK_DOKUMAN.md](./TEKNIK_DOKUMAN.md) — Teknik dokümantasyon
+- [IMPLEMENTATION.md](./IMPLEMENTATION.md) — Uygulama notları
