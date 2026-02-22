@@ -1,4 +1,5 @@
 import type { LexicalNode, LexicalContent } from '~/types'
+import { slugify } from '~/utils/slug'
 
 function escapeHtml(text: string): string {
   return text
@@ -6,6 +7,11 @@ function escapeHtml(text: string): string {
     .replace(/</g, '&lt;')
     .replace(/>/g, '&gt;')
     .replace(/"/g, '&quot;')
+}
+
+function extractText(node: LexicalNode): string {
+  if (node.type === 'text') return node.text ?? ''
+  return (node.children ?? []).map(extractText).join('')
 }
 
 function applyTextFormat(text: string, format: number): string {
@@ -35,8 +41,11 @@ function renderNode(node: LexicalNode): string {
       return children
     case 'paragraph':
       return `<p>${children}</p>`
-    case 'heading':
-      return `<${node.tag ?? 'h2'}>${children}</${node.tag ?? 'h2'}>`
+    case 'heading': {
+      const tag = node.tag ?? 'h2'
+      const id = slugify(extractText(node))
+      return `<${tag} id="${id}">${children}</${tag}>`
+    }
     case 'list':
       return node.listType === 'number'
         ? `<ol>${children}</ol>`
@@ -50,6 +59,11 @@ function renderNode(node: LexicalNode): string {
       const url = node.fields?.url ?? ''
       const target = node.fields?.newTab ? ' target="_blank" rel="noopener noreferrer"' : ''
       return `<a href="${escapeHtml(url)}"${target}>${children}</a>`
+    }
+    case 'code': {
+      const lang = node.language ?? ''
+      const langAttr = lang ? ` data-language="${escapeHtml(lang)}"` : ''
+      return `<pre${langAttr}><code>${children}</code></pre>`
     }
     case 'horizontalrule':
       return '<hr />'
