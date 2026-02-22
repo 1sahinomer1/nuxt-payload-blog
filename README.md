@@ -7,27 +7,26 @@ A production-ready blog platform built with **Nuxt 4**, **Payload CMS 3**, **Tai
 - Node.js >= 20.9.0
 - pnpm >= 9.0.0
 
-## Setup
+## Local Development (Quick Start)
 
 ```bash
-# Install all dependencies (root + CMS)
+# 1. Install all dependencies
 pnpm install
 
-# Copy environment files
+# 2. Create environment files
 cp .env.example .env
 cp cms/.env.example cms/.env
-```
 
-## Development
-
-Start both the CMS and the Nuxt frontend:
-
-```bash
-# Terminal 1 — Payload CMS (http://localhost:3001)
+# 3. Start Payload CMS (Terminal 1)
 pnpm cms:dev
+# → http://localhost:3001 (Admin panel: http://localhost:3001/admin)
 
-# Terminal 2 — Nuxt frontend (http://localhost:3000)
+# 4. Start Nuxt frontend (Terminal 2)
 pnpm dev
+# → http://localhost:3000
+
+# 5. (Optional) Seed the database with sample content
+pnpm cms:seed
 ```
 
 ### CMS Admin Panel
@@ -38,14 +37,7 @@ On first launch, create an admin account at the registration screen.
 
 ### Seed Data
 
-Populate the CMS with sample content:
-
-```bash
-cd cms
-pnpm seed
-```
-
-This creates:
+`pnpm cms:seed` creates:
 - 1 admin user (`admin@example.com` / `changeme123`)
 - 1 author
 - 3 blog posts
