@@ -125,6 +125,27 @@ CMS yalnızca PostgreSQL kullanacak şekilde yapılandırılmıştır (productio
 └── package.json
 ```
 
+## Performance
+
+Site, görsel ağırlıklı içeriğe rağmen [PageSpeed Insights](https://pagespeed.web.dev/) (web.dev) ile ölçüldüğünde mükemmel performans skorları elde eder. LCP optimizasyonu (`fetchpriority="high"`, above-the-fold görsellerde lazy loading kaldırılması), CMS preconnect ve SSR sayesinde hızlı yükleme sağlanır.
+
+**Lighthouse skorları (Desktop):**
+
+| Metrik | Değer |
+|--------|-------|
+| Performans | 100 |
+| Erişilebilirlik | 100 |
+| En İyi Uygulamalar | 100 |
+| SEO | 100 |
+
+**Core Web Vitals:**
+- First Contentful Paint: 0,3 sn
+- Largest Contentful Paint: 0,3 sn
+- Total Blocking Time: 0 ms
+- Cumulative Layout Shift: 0
+
+*Ölçüm: [nuxt-blog-frontend.vercel.app](https://nuxt-blog-frontend.vercel.app/) — PageSpeed Insights*
+
 ## Tech Stack
 
 - **Nuxt 4** — SSR Vue framework
