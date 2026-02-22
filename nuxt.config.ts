@@ -33,6 +33,7 @@ export default defineNuxtConfig({
       htmlAttrs: { lang: 'en' },
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
+        { rel: 'preconnect', href: process.env.NUXT_PUBLIC_PAYLOAD_URL || 'http://localhost:3001', crossorigin: 'anonymous' },
       ],
       script: [
         {

@@ -4,9 +4,13 @@ import { formatDate } from '~/utils/format'
 import { resolveCoverImage } from '~/utils/media'
 import { extractAuthorName, getPostDate } from '~/utils/post'
 
-const props = defineProps<{
-  post: Post
-}>()
+const props = withDefaults(
+  defineProps<{
+    post: Post
+    priority?: boolean
+  }>(),
+  { priority: false },
+)
 
 const config = useRuntimeConfig()
 
@@ -27,7 +31,8 @@ const authorName = computed(() => extractAuthorName(props.post))
           :src="cover.url"
           :alt="cover.alt"
           class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
-          loading="lazy"
+          :loading="priority ? 'eager' : 'lazy'"
+          :fetchpriority="priority ? 'high' : undefined"
           decoding="async"
           @error="(e) => (e.currentTarget!.src = '/placeholder-image.svg')"
         />
