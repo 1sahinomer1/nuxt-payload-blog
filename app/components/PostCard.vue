@@ -1,51 +1,31 @@
 <script setup lang="ts">
-import type { Post, Media } from '~/types'
+import type { Post } from '~/types'
+import { formatDate } from '~/utils/format'
+import { resolveCoverImage } from '~/utils/media'
+import { extractAuthorName, getPostDate } from '~/utils/post'
 
 const props = defineProps<{
   post: Post
 }>()
 
-const coverUrl = computed(() => {
-  if (!props.post.coverImage) return null
-  if (typeof props.post.coverImage === 'string') return props.post.coverImage
-  return (props.post.coverImage as Media).url ?? null
-})
-
-const coverAlt = computed(() => {
-  if (!props.post.coverImage || typeof props.post.coverImage === 'string') return props.post.title
-  return (props.post.coverImage as Media).alt ?? props.post.title
-})
-
-const formattedDate = computed(() => {
-  const date = props.post.publishedAt ?? props.post.createdAt
-  return new Date(date).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  })
-})
-
-const authorName = computed(() => {
-  if (!props.post.author) return null
-  if (typeof props.post.author === 'string') return null
-  return props.post.author.name
-})
-
 const config = useRuntimeConfig()
-const resolvedCoverUrl = computed(() => {
-  if (!coverUrl.value) return null
-  if (coverUrl.value.startsWith('http')) return coverUrl.value
-  return `${config.public.payloadUrl}${coverUrl.value}`
-})
+
+const cover = computed(() =>
+  resolveCoverImage(props.post.coverImage, props.post.title, config.public.payloadUrl),
+)
+
+const formattedDate = computed(() => formatDate(getPostDate(props.post)))
+
+const authorName = computed(() => extractAuthorName(props.post))
 </script>
 
 <template>
   <article class="group">
     <NuxtLink :to="`/blog/${post.slug}`" class="block">
-      <div v-if="resolvedCoverUrl" class="aspect-[16/10] overflow-hidden rounded-xl bg-gray-100">
+      <div v-if="cover" class="aspect-[16/10] overflow-hidden rounded-xl bg-gray-100">
         <img
-          :src="resolvedCoverUrl"
-          :alt="coverAlt"
+          :src="cover.url"
+          :alt="cover.alt"
           class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           loading="lazy"
           decoding="async"
