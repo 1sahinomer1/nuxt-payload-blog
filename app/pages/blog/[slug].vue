@@ -3,6 +3,7 @@ import { renderRichText } from '~/utils/richtext'
 import { formatDate, toIsoDate, estimateReadingTime } from '~/utils/format'
 import { resolveCoverImage } from '~/utils/media'
 import { extractAuthor, getPostDate } from '~/utils/post'
+import { extractTocItems } from '~/utils/toc'
 import { SITE_NAME } from '~/constants/meta'
 
 const route = useRoute()
@@ -32,6 +33,8 @@ const htmlContent = computed(() => {
 })
 
 const readingTime = computed(() => htmlContent.value ? estimateReadingTime(htmlContent.value) : 0)
+
+const tocItems = computed(() => extractTocItems(htmlContent.value))
 
 const canonicalUrl = computed(() => `${config.public.siteUrl}/blog/${slug}`)
 
@@ -107,9 +110,12 @@ watchEffect(() => {
 
     <header class="bg-gray-50 dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 transition-colors">
       <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <NuxtLink to="/blog" class="text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
-          &larr; Back to blog
-        </NuxtLink>
+        <div class="flex items-center justify-between">
+          <NuxtLink to="/blog" class="text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
+            &larr; Back to blog
+          </NuxtLink>
+          <ShareButtons :url="canonicalUrl" :title="post.title" />
+        </div>
 
         <h1 class="mt-6 text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-tight">
           {{ post.title }}
@@ -139,7 +145,7 @@ watchEffect(() => {
       </div>
     </header>
 
-    <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+    <div class="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
       <figure v-if="coverImage" class="mb-10">
         <img
           :src="coverImage.url"
@@ -152,6 +158,25 @@ watchEffect(() => {
       </figure>
 
       <div class="prose" v-html="htmlContent" />
+
+      <aside class="absolute top-0 -right-56 w-48 sticky-toc">
+        <div class="sticky top-24">
+          <TableOfContents :items="tocItems" />
+        </div>
+      </aside>
     </div>
   </article>
 </template>
+
+<style scoped>
+.sticky-toc {
+  float: right;
+  position: relative;
+}
+
+@media (max-width: 1279px) {
+  .sticky-toc {
+    display: none;
+  }
+}
+</style>

@@ -31,6 +31,7 @@ export interface LexicalNode {
   url?: string
   direction?: string
   indent?: number
+  language?: string
   fields?: {
     url?: string
     newTab?: boolean
