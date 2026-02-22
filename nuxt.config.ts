@@ -5,6 +5,14 @@ export default defineNuxtConfig({
   ssr: true,
   devtools: { enabled: true },
 
+  components: [
+    { path: '~/components/layout', pathPrefix: false },
+    { path: '~/components/post-card', pathPrefix: false },
+    { path: '~/components/blog', pathPrefix: false },
+    { path: '~/components/ui', pathPrefix: false },
+    { path: '~/components' },
+  ],
+
   css: ['~/assets/css/main.css'],
 
   vite: {

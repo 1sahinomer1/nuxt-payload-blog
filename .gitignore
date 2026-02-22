@@ -4,6 +4,8 @@ node_modules
 .output
 .data
 .env
+.env.example
+cms/.env.example
 dist
 .DS_Store
 *.local
