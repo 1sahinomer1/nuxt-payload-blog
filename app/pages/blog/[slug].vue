@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { renderRichText } from '~/utils/richtext'
-import { formatDate, toIsoDate } from '~/utils/format'
+import { formatDate, toIsoDate, estimateReadingTime } from '~/utils/format'
 import { resolveCoverImage } from '~/utils/media'
 import { extractAuthor, getPostDate } from '~/utils/post'
 import { SITE_NAME } from '~/constants/meta'
@@ -30,6 +30,8 @@ const htmlContent = computed(() => {
   if (!post.value?.content) return ''
   return renderRichText(post.value.content)
 })
+
+const readingTime = computed(() => htmlContent.value ? estimateReadingTime(htmlContent.value) : 0)
 
 const canonicalUrl = computed(() => `${config.public.siteUrl}/blog/${slug}`)
 
@@ -101,21 +103,27 @@ watchEffect(() => {
   />
 
   <article v-else class="pb-16">
-    <header class="bg-gray-50 border-b border-gray-100">
+    <ScrollProgress />
+
+    <header class="bg-gray-50 dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 transition-colors">
       <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <NuxtLink to="/blog" class="text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors">
+        <NuxtLink to="/blog" class="text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
           &larr; Back to blog
         </NuxtLink>
 
-        <h1 class="mt-6 text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900 leading-tight">
+        <h1 class="mt-6 text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-tight">
           {{ post.title }}
         </h1>
 
-        <div class="mt-4 flex flex-wrap items-center gap-4 text-sm text-gray-500">
+        <div class="mt-4 flex flex-wrap items-center gap-4 text-sm text-gray-500 dark:text-gray-400">
           <time :datetime="isoDate">{{ formattedDate }}</time>
           <template v-if="author">
             <span aria-hidden="true">&middot;</span>
             <span>{{ author.name }}</span>
+          </template>
+          <template v-if="readingTime">
+            <span aria-hidden="true">&middot;</span>
+            <span>{{ readingTime }} min read</span>
           </template>
         </div>
 
@@ -123,7 +131,7 @@ watchEffect(() => {
           <span
             v-for="item in post.tags"
             :key="item.tag"
-            class="inline-flex items-center rounded-full bg-primary-50 px-3 py-1 text-xs font-medium text-primary-700"
+            class="inline-flex items-center rounded-full bg-primary-50 dark:bg-primary-950 px-3 py-1 text-xs font-medium text-primary-700 dark:text-primary-300"
           >
             {{ item.tag }}
           </span>
