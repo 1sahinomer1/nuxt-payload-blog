@@ -2,7 +2,6 @@ import path from 'path'
 import { fileURLToPath } from 'url'
 import { buildConfig } from 'payload'
 import { postgresAdapter } from '@payloadcms/db-postgres'
-import { sqliteAdapter } from '@payloadcms/db-sqlite'
 import { lexicalEditor } from '@payloadcms/richtext-lexical'
 import { Posts } from './src/collections/Posts'
 import { Authors } from './src/collections/Authors'
@@ -12,8 +11,11 @@ import { Users } from './src/collections/Users'
 const filename = fileURLToPath(import.meta.url)
 const dirname = path.dirname(filename)
 
-const databaseUrl = process.env.DATABASE_URL || 'file:./data/payload.db'
-const isPostgres = databaseUrl.startsWith('postgres')
+const databaseUrl = process.env.DATABASE_URL || ''
+
+if (!databaseUrl) {
+  throw new Error('DATABASE_URL environment variable is required. Use a PostgreSQL connection string.')
+}
 
 const vercelUrl = process.env.VERCEL_PROJECT_PRODUCTION_URL
 const serverUrl = process.env.SERVER_URL || (vercelUrl ? `https://${vercelUrl}` : 'http://localhost:3001')
@@ -40,9 +42,11 @@ export default buildConfig({
 
   editor: lexicalEditor(),
 
-  db: isPostgres
-    ? postgresAdapter({ pool: { connectionString: databaseUrl } })
-    : sqliteAdapter({ client: { url: databaseUrl } }),
+  db: postgresAdapter({
+    pool: {
+      connectionString: databaseUrl,
+    },
+  }),
 
   secret: process.env.PAYLOAD_SECRET || 'dev-secret-change-in-production',
 
