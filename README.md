@@ -13,10 +13,9 @@ A production-ready blog platform built with **Nuxt 4**, **Payload CMS 3**, **Tai
 # 1. Install all dependencies
 pnpm install
 
-# 2. Create environment files
-cp .env.example .env
-cp cms/.env.example cms/.env
-# Edit cms/.env and set DATABASE_URL to a PostgreSQL connection string (e.g. Neon, local Postgres).
+# 2. Create environment files (see Environment Variables below for values)
+# Root: .env
+# CMS: cms/.env
 
 # 3. Start Payload CMS (Terminal 1)
 pnpm cms:dev
@@ -75,6 +74,7 @@ pnpm preview
 |----------|-------------|
 | `DATABASE_URL` | PostgreSQL connection string (required). Example: `postgresql://user:pass@host:5432/dbname?sslmode=require` |
 | `PAYLOAD_SECRET` | Secret key for Payload (required in production) |
+| `BLOB_READ_WRITE_TOKEN` | Vercel Blob Storage token for media uploads (Vercel deploy için) |
 
 ## Deployment
 
@@ -91,6 +91,15 @@ pnpm preview
    - Environment: `DATABASE_URL` (PostgreSQL), `PAYLOAD_SECRET`, `FRONTEND_URL` (optional, for CORS)
 
 CMS yalnızca PostgreSQL kullanacak şekilde yapılandırılmıştır (production ve local için `DATABASE_URL` gerekir).
+
+### Payload Config (`cms/payload.config.ts`) Özeti
+
+- **serverURL**: CMS API adresi
+- **collections**: Posts, Authors, Media, Users
+- **plugins**: vercelBlobStorage — medya dosyaları Vercel Blob'da saklanır
+- **db**: postgresAdapter — PostgreSQL bağlantısı
+- **secret**: Payload oturum şifrelemesi
+- **cors/csrf**: Frontend origin'leri
 
 ## Project Structure
 

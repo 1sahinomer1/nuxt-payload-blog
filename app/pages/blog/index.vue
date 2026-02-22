@@ -46,7 +46,7 @@ useHead({
       />
 
       <div v-else-if="data?.docs?.length" class="grid gap-8 sm:grid-cols-2 lg:grid-cols-3">
-        <PostCard v-for="post in data.docs" :key="post.id" :post="post" />
+        <PostCard v-for="(post, i) in data.docs" :key="post.id" :post="post" :priority="i < 3" />
       </div>
 
       <EmptyState v-else icon="document" message="No posts published yet." />

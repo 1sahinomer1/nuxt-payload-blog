@@ -109,7 +109,7 @@ watchEffect(() => {
     <ScrollProgress />
 
     <header class="bg-gray-50 dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 transition-colors">
-      <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+      <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div class="flex items-center justify-between">
           <NuxtLink to="/blog" class="text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
             &larr; Back to blog
@@ -145,38 +145,30 @@ watchEffect(() => {
       </div>
     </header>
 
-    <div class="relative max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
-      <figure v-if="coverImage" class="mb-10">
-        <img
-          :src="coverImage.url"
-          :alt="coverImage.alt"
-          :width="coverImage.width ?? undefined"
-          :height="coverImage.height ?? undefined"
-          class="w-full rounded-xl object-cover"
-          fetchpriority="high"
-        />
-      </figure>
+    <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 mt-10">
+      <div class="grid grid-cols-1 xl:grid-cols-[1fr_220px] xl:gap-12">
+        <div class="min-w-0">
+          <figure v-if="coverImage" class="mb-10">
+            <img
+              :src="coverImage.url"
+              :alt="coverImage.alt"
+              :width="coverImage.width ?? undefined"
+              :height="coverImage.height ?? undefined"
+              class="w-full rounded-xl object-cover"
+              fetchpriority="high"
+              @error="(e) => (e.currentTarget!.src = '/placeholder-image.svg')"
+            />
+          </figure>
 
-      <div class="prose" v-html="htmlContent" />
-
-      <aside class="absolute top-0 -right-56 w-48 sticky-toc">
-        <div class="sticky top-24">
-          <TableOfContents :items="tocItems" />
+          <div class="prose max-w-4xl" v-html="htmlContent" />
         </div>
-      </aside>
+
+        <aside class="hidden xl:block shrink-0">
+          <div class="sticky top-24">
+            <TableOfContents :items="tocItems" />
+          </div>
+        </aside>
+      </div>
     </div>
   </article>
 </template>
-
-<style scoped>
-.sticky-toc {
-  float: right;
-  position: relative;
-}
-
-@media (max-width: 1279px) {
-  .sticky-toc {
-    display: none;
-  }
-}
-</style>
