@@ -10,6 +10,6 @@ onMounted(() => init())
       <slot />
     </main>
     <AppFooter />
-    <BackToTop />
+    <LazyBackToTop />
   </div>
 </template>

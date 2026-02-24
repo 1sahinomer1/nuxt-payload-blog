@@ -27,13 +27,15 @@ const authorName = computed(() => extractAuthorName(props.post))
   <article class="group">
     <NuxtLink :to="`/blog/${post.slug}`" class="block">
       <div v-if="cover" class="aspect-[16/10] overflow-hidden rounded-xl bg-gray-100 dark:bg-gray-800">
-        <img
+        <NuxtImg
           :src="cover.url"
           :alt="cover.alt"
+          width="400"
+          height="250"
+          sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 400px"
           class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           :loading="priority ? 'eager' : 'lazy'"
           :fetchpriority="priority ? 'high' : undefined"
-          decoding="async"
           @error="(e) => (e.currentTarget!.src = '/placeholder-image.svg')"
         />
       </div>

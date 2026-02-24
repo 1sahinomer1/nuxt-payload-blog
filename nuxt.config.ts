@@ -1,9 +1,20 @@
 import tailwindcss from '@tailwindcss/vite'
 
+const payloadUrl = process.env.NUXT_PUBLIC_PAYLOAD_URL || 'http://localhost:3001'
+const cmsDomain = new URL(payloadUrl).hostname
+
 export default defineNuxtConfig({
   compatibilityDate: '2025-01-01',
   ssr: true,
   devtools: { enabled: true },
+
+  modules: ['@nuxt/image'],
+
+  image: {
+    domains: [cmsDomain, 'nuxt-blog-cms.vercel.app'],
+    quality: 80,
+    format: ['webp', 'avif'],
+  },
 
   components: [
     { path: '~/components/layout', pathPrefix: false },
