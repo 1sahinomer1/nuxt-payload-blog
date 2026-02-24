@@ -36,7 +36,7 @@ const authorName = computed(() => extractAuthorName(props.post))
           class="h-full w-full object-cover transition-transform duration-300 group-hover:scale-105"
           :loading="priority ? 'eager' : 'lazy'"
           :fetchpriority="priority ? 'high' : undefined"
-          @error="(e) => (e.currentTarget!.src = '/placeholder-image.svg')"
+          @error="(e: Event) => ((e.currentTarget as HTMLImageElement).src = '/placeholder-image.svg')"
         />
       </div>
       <div v-else class="aspect-[16/10] overflow-hidden rounded-xl bg-gradient-to-br from-primary-100 to-primary-50 dark:from-primary-900 dark:to-primary-950 flex items-center justify-center">

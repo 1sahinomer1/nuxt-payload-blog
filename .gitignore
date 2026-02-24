@@ -16,3 +16,6 @@ cms/data
 cms/media
 cms/payload-types.ts
 .vercel
+
+# Test coverage
+coverage

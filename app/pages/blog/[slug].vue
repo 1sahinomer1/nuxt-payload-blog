@@ -158,7 +158,7 @@ watchEffect(() => {
               class="w-full rounded-xl object-cover"
               fetchpriority="high"
               loading="eager"
-              @error="(e) => (e.currentTarget!.src = '/placeholder-image.svg')"
+              @error="(e: Event) => ((e.currentTarget as HTMLImageElement).src = '/placeholder-image.svg')"
             />
           </figure>
 

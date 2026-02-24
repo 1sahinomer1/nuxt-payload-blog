@@ -7,6 +7,8 @@ const currentPage = computed(() => Number(route.query.page) || 1)
 const { getPosts } = usePosts()
 const { data, pending, error, refresh } = await getPosts(currentPage.value, 9)
 
+watch(currentPage, () => refresh())
+
 const config = useRuntimeConfig()
 
 useHead({
