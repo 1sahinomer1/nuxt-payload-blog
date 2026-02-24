@@ -21,7 +21,14 @@ export default defineEventHandler(async (event) => {
     posts = []
   }
 
-  const urls = [
+  interface SitemapUrl {
+    loc: string
+    changefreq: string
+    priority: string
+    lastmod?: string
+  }
+
+  const urls: SitemapUrl[] = [
     { loc: siteUrl, changefreq: 'daily', priority: '1.0' },
     { loc: `${siteUrl}/blog`, changefreq: 'daily', priority: '0.9' },
     ...posts.map((post) => ({

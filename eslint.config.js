@@ -7,6 +7,7 @@ export default [
   {
     ignores: ['.nuxt/**', '.output/**', 'node_modules/**', 'cms/**'],
   },
+  ...pluginVue.configs['flat/recommended'],
   {
     files: ['**/*.ts', '**/*.vue'],
     languageOptions: {
@@ -18,12 +19,15 @@ export default [
       },
     },
     plugins: {
-      vue: pluginVue,
       '@typescript-eslint': tseslint,
     },
     rules: {
       'vue/multi-word-component-names': 'off',
       '@typescript-eslint/no-explicit-any': 'warn',
+      '@typescript-eslint/no-unused-vars': ['warn', { argsIgnorePattern: '^_' }],
+      'vue/require-default-prop': 'off',
+      'vue/no-v-html': 'warn',
+      'no-console': ['warn', { allow: ['warn', 'error'] }],
     },
   },
 ]
