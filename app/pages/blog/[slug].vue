@@ -106,7 +106,7 @@ watchEffect(() => {
   />
 
   <article v-else class="pb-16">
-    <ScrollProgress />
+    <LazyScrollProgress />
 
     <header class="bg-gray-50 dark:bg-gray-900 border-b border-gray-100 dark:border-gray-800 transition-colors">
       <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
@@ -114,7 +114,7 @@ watchEffect(() => {
           <NuxtLink to="/blog" class="text-sm font-medium text-primary-600 dark:text-primary-400 hover:text-primary-700 dark:hover:text-primary-300 transition-colors">
             &larr; Back to blog
           </NuxtLink>
-          <ShareButtons :url="canonicalUrl" :title="post.title" />
+          <LazyShareButtons :url="canonicalUrl" :title="post.title" />
         </div>
 
         <h1 class="mt-6 text-3xl sm:text-4xl font-extrabold tracking-tight text-gray-900 dark:text-white leading-tight">
@@ -149,13 +149,15 @@ watchEffect(() => {
       <div class="grid grid-cols-1 xl:grid-cols-[1fr_220px] xl:gap-12">
         <div class="min-w-0">
           <figure v-if="coverImage" class="mb-10">
-            <img
+            <NuxtImg
               :src="coverImage.url"
               :alt="coverImage.alt"
-              :width="coverImage.width ?? undefined"
-              :height="coverImage.height ?? undefined"
+              width="896"
+              height="504"
+              sizes="(max-width: 1280px) 100vw, 896px"
               class="w-full rounded-xl object-cover"
               fetchpriority="high"
+              loading="eager"
               @error="(e) => (e.currentTarget!.src = '/placeholder-image.svg')"
             />
           </figure>
@@ -165,7 +167,7 @@ watchEffect(() => {
 
         <aside class="hidden xl:block shrink-0">
           <div class="sticky top-24">
-            <TableOfContents :items="tocItems" />
+            <LazyTableOfContents :items="tocItems" />
           </div>
         </aside>
       </div>
